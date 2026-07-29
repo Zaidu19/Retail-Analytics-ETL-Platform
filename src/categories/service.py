@@ -53,7 +53,7 @@ def update_category(category_id:UUID,payload:CategoryUpdateSchema,db:Session)->C
 
     return category
 
-def delete_category(category_id:UUID,db:Session):
+def delete_category(category_id:UUID,db:Session)->None:
     category = db.get(CategoryModel,category_id)
     if not category:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found")
