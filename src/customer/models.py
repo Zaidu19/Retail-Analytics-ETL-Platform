@@ -7,7 +7,10 @@ from sqlalchemy.orm import Mapped,mapped_column,relationship
 
 from src.common.mixin import UUIDPrimaryKeyMixin,TimestampMixin
 from src.db.base import Base
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from src.orders.models import OrderModel
 
 class CustomerModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     __tablename__="customers"
@@ -49,4 +52,6 @@ class CustomerModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
         default=True,
         nullable= False,
     )
+
+    orders :Mapped[list["OrderModel"]] = relationship(back_populates="customer")
     
