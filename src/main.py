@@ -1,3 +1,4 @@
+from src.db import models
 from fastapi import FastAPI
 
 from src.api.router import api_router

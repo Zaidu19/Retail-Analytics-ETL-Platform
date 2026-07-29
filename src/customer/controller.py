@@ -18,7 +18,7 @@ from src.customer.service import(
 
 from src.db.database import get_db
 
-router = APIRouter(prefix="/customers",tags=["customers"])
+router = APIRouter(prefix="/customers",tags=["Customers"])
 
 @router.post("/",response_model=CustomerResponseSchema,status_code=status.HTTP_201_CREATED)
 def create_customer_endpoint(payload:CustomerCreateSchema,db:Session=Depends(get_db)):
