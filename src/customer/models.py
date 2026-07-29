@@ -29,7 +29,7 @@ class CustomerModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
         nullable=True,
     )
 
-    Country :Mapped[str]=mapped_column(
+    country :Mapped[str]=mapped_column(
         String(100),
         nullable=False,
     )
