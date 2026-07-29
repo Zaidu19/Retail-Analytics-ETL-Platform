@@ -56,7 +56,7 @@ def update_customer(customer_id:str,payload:CustomerUpdateSchema,db:Session)->Cu
 
     return customer
 
-def delete_customer(customer_id:str,db:Session,)->dict[str,str]:
+def delete_customer(customer_id:str,db:Session,)->None:
     customer= db.get(CustomerModel,customer_id)
     if not customer:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="customer not found")
