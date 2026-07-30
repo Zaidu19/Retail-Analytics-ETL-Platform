@@ -17,6 +17,8 @@ from src.customers.service import(
 )
 
 from src.db.database import get_db
+from src.orders.service import get_orders_by_customer
+from src.orders.dtos import OrderResponseSchema
 
 router = APIRouter(prefix="/customers",tags=["Customers"])
 
@@ -39,3 +41,7 @@ def update_customer_endpoint(customer_id:UUID,payload:CustomerUpdateSchema,db:Se
 @router.delete("/{customer_id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_customer_endpoint(customer_id:UUID,db:Session=Depends(get_db)):
     return delete_customer(customer_id,db)
+
+@router.get("/{customer_id}/orders",response_model=list[OrderResponseSchema],status_code=status.HTTP_200_OK)
+def get_orders_by_customer_id_endpoint(customer_id:UUID,db:Session=Depends(get_db)):
+    return get_orders_by_customer(customer_id,db)
