@@ -47,7 +47,7 @@ class OrderModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
         default=0
     )
     grand_total:Mapped[Decimal]=mapped_column(
-        Numeric[12,2],
+        Numeric(12,2),
         nullable=False,
         default=0
     )
