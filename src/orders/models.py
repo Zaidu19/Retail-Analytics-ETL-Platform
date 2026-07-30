@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.customers.models import CustomerModel
+    from src.orderitems.models import OrderItemModel
 
 class OrderModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     __tablename__ ="orders"
@@ -52,5 +53,6 @@ class OrderModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     )
 
     customer : Mapped["CustomerModel"] = relationship(back_populates="orders")
+    order_items:Mapped[list["OrderItemModel"]] = relationship(back_populates="order",cascade="all,delete-orphan")
 
 

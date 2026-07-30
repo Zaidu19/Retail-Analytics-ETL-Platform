@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.categories.models import CategoryModel
+    from src.orderitems.models import OrderItemModel
 
 class ProductModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     __tablename__ ="products"
@@ -51,3 +52,4 @@ class ProductModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     )
 
     category : Mapped["CategoryModel"]=relationship(back_populates="products",)
+    order_items:Mapped[list["OrderItemModel"]] = relationship(back_populates="product",)
