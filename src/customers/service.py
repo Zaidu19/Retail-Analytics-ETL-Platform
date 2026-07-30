@@ -4,8 +4,8 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.customer.dtos import CustomerCreateSchema,CustomerUpdateSchema,CustomerResponseSchema
-from src.customer.models import CustomerModel
+from src.customers.dtos import CustomerCreateSchema,CustomerUpdateSchema,CustomerResponseSchema
+from src.customers.models import CustomerModel
 
 def create_customer(payload: CustomerCreateSchema,db: Session,)->CustomerModel:
 

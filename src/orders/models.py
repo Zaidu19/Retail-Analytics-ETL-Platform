@@ -11,7 +11,7 @@ from src.common.enum import OrderStatus
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from src.customer.models import CustomerModel
+    from src.customers.models import CustomerModel
 
 class OrderModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     __tablename__ ="orders"

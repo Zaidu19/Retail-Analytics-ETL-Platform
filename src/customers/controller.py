@@ -3,12 +3,12 @@ from uuid import UUID
 from fastapi import APIRouter,status,Depends
 from sqlalchemy.orm import Session
 
-from src.customer.dtos import(
+from src.customers.dtos import(
     CustomerCreateSchema,
     CustomerResponseSchema,
     CustomerUpdateSchema,
 )
-from src.customer.service import(
+from src.customers.service import(
     create_customer,
     get_all_customers,
     get_customer_with_id,
