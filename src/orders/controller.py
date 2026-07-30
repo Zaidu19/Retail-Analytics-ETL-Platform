@@ -16,6 +16,8 @@ from src.orders.service import(
     update_order,
     cancel_order
 )
+from src.orderitems.service import get_order_items_by_order
+from src.orderitems.dtos import OrderItemResponseSchema
 
 router = APIRouter(prefix="/orders",tags=["Orders"])
 
@@ -39,3 +41,7 @@ def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,db:Session=Dep
 @router.patch("/{order_id}/cancel")
 def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
     return cancel_order(order_id,db)
+
+@router.get("/{order_id}/items",response_model=list[OrderItemResponseSchema])
+def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
+    return get_order_items_by_order(order_id,db)
