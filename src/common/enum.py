@@ -14,4 +14,18 @@ class InventoryReason(str,Enum):
     return_ = "return"
     adjustment = "adjustment"
     damage = "damage"
+
+class PaymentMethod(str,Enum):
+    card = "card"
+    upi = "upi"
+    net_banking = "net_banking"
+    cash ="cash"
+    wallet ="wallet"
+
+class PaymentStatus(str,Enum):
+    pending = "pending"
+    success = "success"
+    failed = "failed"
+    refunded = "refunded"
+        
     
