@@ -17,6 +17,6 @@ class PaymentModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     amount:Mapped[Decimal] = mapped_column(Numeric(12,2),nullable=False)
     payment_method:Mapped[PaymentMethod]=mapped_column(Enum(PaymentMethod),nullable=False)
     payment_status:Mapped[PaymentStatus] = mapped_column(Enum(PaymentStatus),default=PaymentStatus.pending,nullable=False)
-    paid_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),server_default=func.now(),nullable=False)
+    paid_at:Mapped[datetime]=mapped_column(DateTime(timezone=True),server_default=func.now(),nullable=True)
 
     order:Mapped["OrderModel"]=relationship(back_populates="payments")
