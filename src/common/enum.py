@@ -12,6 +12,6 @@ class InventoryReason(str,Enum):
     sale = "sale"
     restock = "restock"
     return_ = "return"
-    ajustment = "adjustment"
+    adjustment = "adjustment"
     damage = "damage"
     

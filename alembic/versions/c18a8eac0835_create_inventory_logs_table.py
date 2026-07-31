@@ -24,7 +24,7 @@ def upgrade() -> None:
     op.create_table('inventory_logs',
     sa.Column('product_id', sa.UUID(), nullable=False),
     sa.Column('change_qty', sa.Integer(), nullable=False),
-    sa.Column('reason', sa.Enum('sale', 'restock', 'return_', 'ajustment', 'damage', name='inventoryreason'), nullable=False),
+    sa.Column('reason', sa.Enum('sale', 'restock', 'return_', 'adjustment', 'damage', name='inventoryreason'), nullable=False),
     sa.Column('id', sa.UUID(), nullable=False),
     sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
