@@ -7,3 +7,11 @@ class OrderStatus(str, Enum):
     delivered = "delivered"
     cancelled = "cancelled"
     completed = "completed"
+
+class InventoryReason(str,Enum):
+    sale = "sale"
+    restock = "restock"
+    return_ = "return"
+    ajustment = "adjustment"
+    damage = "damage"
+    
