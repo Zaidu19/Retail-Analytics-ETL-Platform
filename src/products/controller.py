@@ -17,6 +17,9 @@ from src.products.service import(
     delete_product,
 )
 
+from src.inventory_logs.service import get_inventory_logs_by_product
+from src.inventory_logs.dtos import InventoryLogResponseSchema
+
 router =APIRouter(prefix="/products",tags=["Products"])
 
 @router.post("/",response_model=ProductResponseSchema,status_code=status.HTTP_201_CREATED)
@@ -38,3 +41,7 @@ def update_product_endpoint(product_id:UUID,payload:ProductUpdateSchema,db:Sessi
 @router.delete("/{product_id}",status_code=status.HTTP_204_NO_CONTENT)
 def delete_product_endpoint(product_id:UUID,db:Session=Depends(get_db)):
     return delete_product(product_id,db)
+
+@router.get("/{product_id}/inventory-logs",response_model=list[InventoryLogResponseSchema],status_code=status.HTTP_200_OK)
+def get_inventory_logs_by_product_endpoint(product_id:UUID,db:Session=Depends(get_db)):
+    return get_inventory_logs_by_product(product_id,db)
