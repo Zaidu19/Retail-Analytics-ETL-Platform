@@ -58,9 +58,9 @@ def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
 def get_list_order_items_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,ge=1,le=100)):
     return get_list_order_items(db,skip,limit)
 
-@round.get("/items/{order_item_id}",response_model =OrderItemResponseSchema,status_code=status.HTTP_200_OK)
-def get_order_item_by_id_endpoint(order_item_id:UUID,db:Session=Depends(get_db)):
-    return get_order_item_by_id(order_item_id,db)
+@router.get("/items/{order_item_id}",response_model =OrderItemResponseSchema,status_code=status.HTTP_200_OK)
+def get_order_item_by_id_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,gt=0,le=100)):
+    return get_order_item_by_id(db,skip,limit)
 
 
 
