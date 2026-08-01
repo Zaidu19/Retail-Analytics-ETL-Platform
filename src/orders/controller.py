@@ -1,5 +1,5 @@
 from uuid import UUID
-from fastapi import APIRouter,status,Response,Depends,Query
+from fastapi import APIRouter,status,Depends,Query
 from sqlalchemy.orm import Session
 
 from src.db.database import get_db
@@ -16,7 +16,11 @@ from src.orders.service import(
     update_order,
     cancel_order
 )
-from src.orderitems.service import get_order_items_by_order
+from src.orderitems.service import( 
+    get_order_items_by_order,
+    get_order_item_by_id,
+    get_list_order_items,
+)
 from src.orderitems.dtos import OrderItemResponseSchema
 from src.payments.service import get_payment_by_order
 from src.payments.dtos import PaymentResponseSchema
@@ -35,7 +39,6 @@ def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=10
 def get_order_by_id_endpoint(order_id:UUID,db:Session=Depends(get_db)):
     return get_order_by_id(order_id,db)
 
-
 @router.patch("/{order_id}/status",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
 def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,db:Session=Depends(get_db)):
     return update_order(order_id,payload,db)
@@ -44,9 +47,22 @@ def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,db:Session=Dep
 def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
     return cancel_order(order_id,db)
 
-@router.get("/{order_id}/items",response_model=list[OrderItemResponseSchema])
+
+
+
+@router.get("/{order_id}/items",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
 def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
     return get_order_items_by_order(order_id,db)
+
+@router.get("/items",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
+def get_list_order_items_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,ge=1,le=100)):
+    return get_list_order_items(db,skip,limit)
+
+@round.get("/items/{order_item_id}",response_model =OrderItemResponseSchema,status_code=status.HTTP_200_OK)
+def get_order_item_by_id_endpoint(order_item_id:UUID,db:Session=Depends(get_db)):
+    return get_order_item_by_id(order_item_id,db)
+
+
 
 @router.get("/{order_id}/payments",response_model=list[PaymentResponseSchema],status_code=status.HTTP_200_OK)
 def get_payment_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):

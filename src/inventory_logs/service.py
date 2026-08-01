@@ -15,16 +15,18 @@ def create_inventory_log(payload:InventoryLogCreateSchema,db:Session)->Inventory
     if not product:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Product not found")
 
-    if payload.reason in (
-        InventoryReason.sale,
-        InventoryReason.damage,
-    ):
+    if payload.reason == InventoryReason.sale:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                            detail="Sale inventory logs are created automatically through order workflow.")
+
+    elif payload.reason == InventoryReason.damage:
+
         if product.stock_qty < payload.change_qty:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Insufficient stock")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Insufficient stock.")
 
         product.stock_qty -= payload.change_qty
         log_change = -payload.change_qty
-
+    
     elif payload.reason in (
         InventoryReason.restock,
         InventoryReason.return_
@@ -33,6 +35,9 @@ def create_inventory_log(payload:InventoryLogCreateSchema,db:Session)->Inventory
         log_change = payload.change_qty
 
     elif payload.reason == InventoryReason.adjustment:
+        
+        if product.stock_qty + payload.change_qty < 0:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Adjustment would result in negative stock.")
         product.stock_qty += payload.change_qty
         log_change = payload.change_qty
 

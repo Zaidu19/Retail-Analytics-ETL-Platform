@@ -124,38 +124,82 @@ def get_orders_by_customer(customer_id:UUID,db:Session)->list[OrderModel]:
     return orders
 
 def update_order(order_id:UUID,payload:OrderUpdateSchema,db:Session)->OrderModel:
-    order = db.get(OrderModel,order_id)
-    if not order:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
-    
-    update_data = payload.model_dump(exclude_unset=True,exclude_none=True)
+    try:    
+        order = db.get(OrderModel,order_id)
+        if not order:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+        if payload.status == OrderStatus.paid:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="Order is marked as PAID automatically after succesfull payment.")
 
-    for key,value in update_data.items():
-        setattr(order,key,value)
+        valid_transition = {
+            OrderStatus.pending:[],
+            OrderStatus.paid:[OrderStatus.shipped],
+            OrderStatus.shipped:[OrderStatus.delivered],
+            OrderStatus.delivered:[OrderStatus.completed],
+            OrderStatus.completed:[],
+            OrderStatus.cancelled:[],
+        }
 
-    db.commit()
-    db.refresh(order)
-    return order
+        if payload.status not in valid_transition[order.status]:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
+                                detail="Cannot change order from {order.status.value} to {payload.status.value}")
+        
+        order.status = payload.status
+
+        db.commit()
+        db.refresh(order)
+        return order
+    except Exception:
+        db.rollback()
+        raise
+
+
+
 
 def cancel_order(order_id:UUID,db:Session)->OrderModel:
-    order = db.get(OrderModel,order_id)
-    if not order:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+    try:    
+        order = db.get(OrderModel,order_id)
+        if not order:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
 
-    if order.status == OrderStatus.cancelled:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Order already cancelled")
+        if order.status == OrderStatus.cancelled:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Order already cancelled")
 
-    if order.status in (
-        OrderStatus.shipped,
-        OrderStatus.delivered):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot cancel shipped or delivered orders")
+        if order.status in (
+            OrderStatus.shipped,
+            OrderStatus.delivered):
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot cancel shipped or delivered orders")
 
-    order.status = OrderStatus.cancelled
+        payment = db.scalars(select(PaymentModel)
+                             .where(PaymentModel.order_id == order.id)
+                             .order_by(PaymentModel.created_at.desc())).first()
 
-    db.commit()
-    db.refresh(order)
+        if payment and payment.payment_status == PaymentStatus.success:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Paid orders must be refunded before cancellation")
 
-    return order        
+        for item in order.order_items:
+            product = db.get(ProductModel,item.product_id)
+
+            product.stock_qty += item.quantity
+
+            inventory_log = InventoryLogModel(
+                product_id = product.id,
+                change_qty = item.quantity,
+                reason = InventoryReason.return_
+            )
+            db.add(inventory_log)
+
+        order.status = OrderStatus.cancelled
+
+        db.commit()
+        db.refresh(order)
+
+        return order 
+    
+    except Exception:
+        db.rollback()
+    raise           
 
 
 

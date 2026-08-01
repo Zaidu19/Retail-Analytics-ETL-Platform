@@ -4,12 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 
 
-class OrderItemCreateSchema(BaseModel):
-    order_id:UUID
-    product_id:UUID
-    quantity:int = Field(gt=0)
 
-    model_config =ConfigDict(from_attributes=True)
 
 class OrderItemResponseSchema(BaseModel):
     id:UUID
@@ -22,5 +17,4 @@ class OrderItemResponseSchema(BaseModel):
 
     model_config =ConfigDict(from_attributes=True)
 
-class OrderItemUpdateSchema(BaseModel):
-    quantity:int=Field(gt=0)    
+ 
