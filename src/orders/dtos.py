@@ -1,12 +1,19 @@
 from datetime import date
 from decimal import Decimal
 from uuid import UUID
-from pydantic import BaseModel,ConfigDict
+from pydantic import BaseModel,ConfigDict,Field
 
-from src.common.enum import OrderStatus
+from src.common.enum import OrderStatus,PaymentMethod
+class OrderItemInputSchema(BaseModel):
+    product_id:UUID
+    quantity:int = Field(...,gt=0)
 
 class OrderCreateSchema(BaseModel):
     customer_id:UUID
+    payment_method:PaymentMethod
+    items:list[OrderItemInputSchema]
+
+    model_config=ConfigDict(from_attributes=True)
 
 class OrderUpdateSchema(BaseModel):
     status:OrderStatus  
