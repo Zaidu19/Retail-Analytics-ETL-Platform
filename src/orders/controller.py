@@ -54,7 +54,7 @@ def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
 def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
     return get_order_items_by_order(order_id,db)
 
-@router.get("/items",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
+@router.get("/list/orderitems",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
 def get_list_order_items_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,ge=1,le=100)):
     return get_list_order_items(db,skip,limit)
 
