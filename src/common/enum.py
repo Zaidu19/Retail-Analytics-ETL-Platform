@@ -27,5 +27,11 @@ class PaymentStatus(str,Enum):
     success = "success"
     failed = "failed"
     refunded = "refunded"
+
+class UserRole(str, Enum):
+    ADMIN = "admin"
+    CUSTOMER = "customer"
+    INVENTORY_MANAGER = "inventory_manager"
+    BUSINESS_ANALYST = "business_analyst"   
         
     
