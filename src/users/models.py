@@ -1,11 +1,14 @@
 
 from sqlalchemy import String, Boolean, Enum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column,relationship
 
 from src.db.base import Base
 from src.common.mixin import UUIDPrimaryKeyMixin, TimestampMixin
 from src.common.enum import UserRole
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    from src.customers.models import CustomerModel
 
 class UserModel(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     __tablename__ = "users"
@@ -19,3 +22,7 @@ class UserModel(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     role: Mapped[UserRole] = mapped_column(Enum(UserRole),nullable=False,)
 
     is_active: Mapped[bool] = mapped_column(Boolean,default=True,nullable=False,)
+
+
+
+    customer :Mapped["CustomerModel"] = relationship(back_populates="user",uselist=False)

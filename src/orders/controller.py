@@ -33,8 +33,8 @@ router = APIRouter(prefix="/orders",tags=["Orders"])
 @router.post("/",response_model=OrderResponseSchema,status_code=status.HTTP_201_CREATED)
 def create_order_endpoint(payload:OrderCreateSchema,
                           db:Session=Depends(get_db),
-                          _:UserModel=Depends(require_roles(UserRole.CUSTOMER))):
-    return create_order(payload,db)
+                          current_user:UserModel=Depends(require_roles(UserRole.CUSTOMER))):
+    return create_order(payload,current_user,db)
 
 @router.get("/",response_model=list[OrderResponseSchema],status_code=status.HTTP_200_OK)
 def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=100),
@@ -44,8 +44,9 @@ def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=10
 
 @router.get("/{order_id}",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
 def get_order_by_id_endpoint(order_id:UUID,db:Session=Depends(get_db),
-                             _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST,))): #later customer own order
-    return get_order_by_id(order_id,db)
+                             current_user:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST,
+                                                                          UserRole.CUSTOMER))): 
+    return get_order_by_id(order_id,current_user,db)
 
 @router.patch("/{order_id}/status",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
 def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,
@@ -62,19 +63,27 @@ def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db),
 
 
 @router.get("/{order_id}/items",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
-def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
-    return get_order_items_by_order(order_id,db)
+def get_order_items_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db),
+                                      current_user:UserModel=Depends(require_roles(UserRole.CUSTOMER,
+                                                    UserRole.ADMIN,UserRole.BUSINESS_ANALYST))):
+    return get_order_items_by_order(order_id,current_user,db)
 
 @router.get("/list/orderitems",response_model=list[OrderItemResponseSchema],status_code=status.HTTP_200_OK)
-def get_list_order_items_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,ge=1,le=100)):
+def get_list_order_items_endpoint(db:Session=Depends(get_db),
+                                  skip:int=Query(0,ge=0),limit:int=Query(100,ge=1,le=100),
+                                  _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST))):
     return get_list_order_items(db,skip,limit)
 
 @router.get("/items/{order_item_id}",response_model =OrderItemResponseSchema,status_code=status.HTTP_200_OK)
-def get_order_item_by_id_endpoint(db:Session=Depends(get_db),skip:int=Query(0,ge=0),limit:int=Query(100,gt=0,le=100)):
-    return get_order_item_by_id(db,skip,limit)
+def get_order_item_by_id_endpoint(order_item_id:UUID,db:Session=Depends(get_db),
+                                  current_user:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.CUSTOMER,
+                                                                               UserRole.BUSINESS_ANALYST))):
+    return get_order_item_by_id(order_item_id,current_user,db)
 
 
 
 @router.get("/{order_id}/payments",response_model=list[PaymentResponseSchema],status_code=status.HTTP_200_OK)
-def get_payment_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
-    return get_payment_by_order(order_id,db)
+def get_payment_by_order_endpoint(order_id:UUID,db:Session=Depends(get_db),
+                                  current_user:UserModel=Depends(require_roles(UserRole.BUSINESS_ANALYST,
+                                                UserRole.ADMIN,UserRole.CUSTOMER))):
+    return get_payment_by_order(order_id,current_user,db)

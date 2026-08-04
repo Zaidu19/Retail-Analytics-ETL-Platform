@@ -8,19 +8,20 @@ from src.products.models import ProductModel
 from src.orderitems.models import OrderItemModel
 from src.inventory_logs.models import InventoryLogModel
 from src.payments.models import PaymentModel
+from src.users.models import UserModel
 
-from src.common.enum import OrderStatus,PaymentStatus,InventoryReason
+from src.common.enum import OrderStatus,PaymentStatus,InventoryReason,UserRole
 from src.common.pricing import calculate_order_total
 from src.orders.dtos import (
     OrderCreateSchema,
     OrderUpdateSchema,
 )
 
-def create_order(payload:OrderCreateSchema,db:Session)->OrderModel:
+def create_order(payload:OrderCreateSchema,current_user:UserModel,db:Session)->OrderModel:
     try:
-        customer =db.get(CustomerModel,payload.customer_id)
+        customer = current_user.customer
         if not customer:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Please create your customer prfile first.")
 
         stock_errors=[]
         validated_products=[]
@@ -46,7 +47,7 @@ def create_order(payload:OrderCreateSchema,db:Session)->OrderModel:
         if stock_errors:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail=stock_errors)    
 
-        new_order = OrderModel(customer_id = payload.customer_id)
+        new_order = OrderModel(customer_id = customer.id)
         db.add(new_order)
         db.flush()
                     
@@ -110,10 +111,15 @@ def get_all_orders(db:Session,skip:int=0,limit:int=50)->list[OrderModel]:
     orders =db.scalars(select(OrderModel).offset(skip).limit(limit)).all()
     return orders
 
-def get_order_by_id(order_id:UUID,db:Session)->OrderModel:
+def get_order_by_id(order_id:UUID,current_user:UserModel,db:Session)->OrderModel:
     order = db.get(OrderModel,order_id)
     if not order:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+    if current_user.role == UserRole.CUSTOMER:
+
+        if order.customer.user_id != current_user.id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You are not allowed to access this order")
+    
     return order
 
 def get_orders_by_customer(customer_id:UUID,db:Session)->list[OrderModel]:

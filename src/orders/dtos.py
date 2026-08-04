@@ -9,7 +9,6 @@ class OrderItemInputSchema(BaseModel):
     quantity:int = Field(...,gt=0)
 
 class OrderCreateSchema(BaseModel):
-    customer_id:UUID
     payment_method:PaymentMethod
     items:list[OrderItemInputSchema]
 

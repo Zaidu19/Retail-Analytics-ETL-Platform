@@ -6,9 +6,6 @@ from pydantic import BaseModel,ConfigDict
 from src.common.enum import PaymentStatus,PaymentMethod
 
 
-class PaymentCreateSchema(BaseModel):
-    order_id:UUID
-    payment_method:PaymentMethod
 
 
 class PaymentUpdateSchema(BaseModel):

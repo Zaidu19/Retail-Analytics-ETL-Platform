@@ -1,28 +1,37 @@
 from uuid import UUID
 
+from datetime import date
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.customers.dtos import CustomerCreateSchema,CustomerUpdateSchema,CustomerResponseSchema
+from src.customers.dtos import CustomerCreateSchema,CustomerUpdateSchema
 from src.customers.models import CustomerModel
+from src.users.models import UserModel
 
-def create_customer(payload: CustomerCreateSchema,db: Session,)->CustomerModel:
+def create_customer(payload: CustomerCreateSchema,current_user:UserModel,db: Session,)->CustomerModel:
 
     existing_customer = db.scalar(
         select(CustomerModel).where(
-            CustomerModel.email == payload.email
+            CustomerModel.user_id == current_user.id
         )
     )
 
     if existing_customer:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Customer with this email already exists",
+            detail="Customer profile already exist.",
         )
 
     customer = CustomerModel(
-        **payload.model_dump()
+        full_name = payload.full_name,
+        email = current_user.email,
+        phone_number = payload.phone_number,
+        country = payload.country,
+        city = payload.city,
+        signup_date = date.today(),
+        is_active = True,
+        user_id = current_user.id
     )
 
     db.add(customer)

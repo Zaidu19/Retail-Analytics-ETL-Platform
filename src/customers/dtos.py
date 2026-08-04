@@ -1,16 +1,13 @@
 from datetime import datetime,date
 from uuid import UUID
 
-from pydantic import BaseModel,EmailStr,Field,ConfigDict
+from pydantic import BaseModel,Field,ConfigDict
 
 class CustomerCreateSchema(BaseModel):
     full_name :str =Field(...,min_length=2,max_length=255)
-    email :EmailStr
     phone_number:str | None = Field(default=None,max_length=20)
     country:str =Field(...,max_length=100)
     city :str = Field(...,max_length=100)
-    signup_date:date
-    is_active :bool = True
 
     model_config = ConfigDict(from_attributes=True)
 

@@ -1,8 +1,8 @@
-import uuid
+from uuid import UUID
 from datetime import date
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean,Date,String
+from sqlalchemy import Boolean,Date,String,ForeignKey
 from sqlalchemy.orm import Mapped,mapped_column,relationship
 
 from src.common.mixin import UUIDPrimaryKeyMixin,TimestampMixin
@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from src.orders.models import OrderModel
+    from src.users.models import UserModel
 
 class CustomerModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
     __tablename__="customers"
@@ -52,6 +53,13 @@ class CustomerModel(UUIDPrimaryKeyMixin,TimestampMixin,Base):
         default=True,
         nullable= False,
     )
+    user_id :Mapped[UUID]=mapped_column(
+        ForeignKey("users.id"),
+        unique= True,
+        nullable= False,
+        )
 
     orders :Mapped[list["OrderModel"]] = relationship(back_populates="customer")
+    user :Mapped["UserModel"] = relationship(back_populates="customer")
+
     

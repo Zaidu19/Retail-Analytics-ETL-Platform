@@ -28,8 +28,8 @@ router = APIRouter(prefix="/customers",tags=["Customers"])
 @router.post("/",response_model=CustomerResponseSchema,status_code=status.HTTP_201_CREATED)
 def create_customer_endpoint(payload:CustomerCreateSchema,
                              db:Session=Depends(get_db),
-                             _:UserModel=Depends(require_roles(UserRole.ADMIN))):
-    return create_customer(payload,db)
+                             current_user:UserModel=Depends(require_roles(UserRole.CUSTOMER))):
+    return create_customer(payload,current_user,db)
 
 @router.get("/",response_model=list[CustomerResponseSchema],status_code=status.HTTP_200_OK)
 def get_all_customer_endpoint(db:Session=Depends(get_db),
