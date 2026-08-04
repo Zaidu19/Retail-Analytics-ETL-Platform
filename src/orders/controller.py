@@ -24,27 +24,38 @@ from src.orderitems.service import(
 from src.orderitems.dtos import OrderItemResponseSchema
 from src.payments.service import get_payment_by_order
 from src.payments.dtos import PaymentResponseSchema
+from src.users.models import UserModel
+from src.auth.service import require_roles
+from src.common.enum import UserRole
 
 router = APIRouter(prefix="/orders",tags=["Orders"])
 
 @router.post("/",response_model=OrderResponseSchema,status_code=status.HTTP_201_CREATED)
-def create_order_endpoint(payload:OrderCreateSchema,db:Session=Depends(get_db)):
+def create_order_endpoint(payload:OrderCreateSchema,
+                          db:Session=Depends(get_db),
+                          _:UserModel=Depends(require_roles(UserRole.CUSTOMER))):
     return create_order(payload,db)
 
 @router.get("/",response_model=list[OrderResponseSchema],status_code=status.HTTP_200_OK)
-def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=100),db:Session=Depends(get_db)):
+def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=100),
+                            db:Session=Depends(get_db),
+                            _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST))):
     return get_all_orders(db,skip,limit)
 
 @router.get("/{order_id}",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
-def get_order_by_id_endpoint(order_id:UUID,db:Session=Depends(get_db)):
+def get_order_by_id_endpoint(order_id:UUID,db:Session=Depends(get_db),
+                             _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST,))): #later customer own order
     return get_order_by_id(order_id,db)
 
 @router.patch("/{order_id}/status",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
-def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,db:Session=Depends(get_db)):
+def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,
+                          db:Session=Depends(get_db),
+                          _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return update_order(order_id,payload,db)
 
 @router.patch("/{order_id}/cancel")
-def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db)):
+def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db),
+                          _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return cancel_order(order_id,db)
 
 
