@@ -7,6 +7,7 @@ class OrderStatus(str, Enum):
     delivered = "delivered"
     cancelled = "cancelled"
     completed = "completed"
+    refunded = "refunded"
 
 class InventoryReason(str,Enum):
     sale = "sale"
@@ -33,5 +34,10 @@ class UserRole(str, Enum):
     CUSTOMER = "customer"
     INVENTORY_MANAGER = "inventory_manager"
     BUSINESS_ANALYST = "business_analyst"   
+
+class RefundStatus(str,Enum):
+    pending = "pending"
+    approved = "approved"
+    rejected = "rejected"    
         
     

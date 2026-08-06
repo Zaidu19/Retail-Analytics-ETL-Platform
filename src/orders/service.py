@@ -21,7 +21,7 @@ def create_order(payload:OrderCreateSchema,current_user:UserModel,db:Session)->O
     try:
         customer = current_user.customer
         if not customer:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Please create your customer prfile first.")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Please create your customer profile first.")
 
         stock_errors=[]
         validated_products=[]
@@ -149,7 +149,7 @@ def update_order(order_id:UUID,payload:OrderUpdateSchema,db:Session)->OrderModel
 
         if payload.status not in valid_transition[order.status]:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail="Cannot change order from {order.status.value} to {payload.status.value}")
+                                detail=f"Cannot change order from {order.status.value} to {payload.status.value}")
         
         order.status = payload.status
 

@@ -6,6 +6,7 @@ from src.orderitems.models import OrderItemModel
 from src.inventory_logs.models import InventoryLogModel
 from src.payments.models import PaymentModel
 from src.users.models import UserModel
+from src.refund.models import RefundModel
 
 __all__ =[
     "CategoryModel",
@@ -15,4 +16,5 @@ __all__ =[
     "OrderItemModel",
     "InventoryLogModel",
     "PaymentModel",
-    "UserModel"]
+    "UserModel",
+    "RefundModel"]
