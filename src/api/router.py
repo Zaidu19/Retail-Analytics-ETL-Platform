@@ -9,6 +9,7 @@ from src.payments.controller import router as payment_router
 from src.users.controller import router as user_router
 from src.auth.controller import router as auth_router
 from src.refund.controller import router as refund_router
+from src.analytics.controller import router as analytics_router
 
 api_router = APIRouter()
 
@@ -21,3 +22,4 @@ api_router.include_router(payment_router)
 api_router.include_router(user_router)
 api_router.include_router(auth_router)
 api_router.include_router(refund_router)
+api_router.include_router(analytics_router)

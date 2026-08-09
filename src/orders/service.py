@@ -205,7 +205,7 @@ def cancel_order(order_id:UUID,db:Session)->OrderModel:
     
     except Exception:
         db.rollback()
-    raise           
+        raise           
 
 
 
