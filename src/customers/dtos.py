@@ -23,6 +23,7 @@ class CustomerUpdateSchema(BaseModel):
 class CustomerResponseSchema(BaseModel):
     id:UUID
     full_name:str
+    username:str
     email:str
     phone_number:str|None
     country:str
@@ -31,5 +32,23 @@ class CustomerResponseSchema(BaseModel):
     is_active :bool
     created_at:datetime
     updated_at:datetime
+
+    model_config = ConfigDict(from_attributes=True)   
+
+class CustomerViewResponseSchema(BaseModel):
+    id:UUID
+    full_name:str
+    email:str
+    phone_number:str|None
+    country:str
+    city:str     
+
+    model_config = ConfigDict(from_attributes=True)
+
+class CustomerOwnUpdateSchema(BaseModel):
+    full_name:str | None =Field(default=None,min_length=2,max_length=255)
+    phone_number :str |None = Field(default=None,max_length=20)
+    country :str|None = Field(default=None,max_length=100)
+    city:str|None = Field(default=None,max_length=100)
 
     model_config = ConfigDict(from_attributes=True)    

@@ -30,31 +30,43 @@ from src.common.enum import UserRole
 
 router = APIRouter(prefix="/orders",tags=["Orders"])
 
-@router.post("/",response_model=OrderResponseSchema,status_code=status.HTTP_201_CREATED)
+@router.post("/",response_model=OrderResponseSchema,status_code=status.HTTP_201_CREATED,
+             summary="Create Order",
+            description="Creates a new order, automatically creates the associated order items, "\
+            "calculates totals, reduces product inventory, records inventory logs, and creates a " \
+            "pending payment.")
 def create_order_endpoint(payload:OrderCreateSchema,
                           db:Session=Depends(get_db),
                           current_user:UserModel=Depends(require_roles(UserRole.CUSTOMER))):
     return create_order(payload,current_user,db)
 
-@router.get("/",response_model=list[OrderResponseSchema],status_code=status.HTTP_200_OK)
+@router.get("/",response_model=list[OrderResponseSchema],status_code=status.HTTP_200_OK,
+            summary="Get all orders.",
+            description="Return list of all orders.")
 def get_all_orders_endpoint(skip:int=Query(0,ge=0),limit:int=Query(50,ge=1,le=100),
                             db:Session=Depends(get_db),
                             _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST))):
     return get_all_orders(db,skip,limit)
 
-@router.get("/{order_id}",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
+@router.get("/{order_id}",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK,
+            summary="Get Order",
+            description="Returns an order by its ID.")
 def get_order_by_id_endpoint(order_id:UUID,db:Session=Depends(get_db),
                              current_user:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST,
                                                                           UserRole.CUSTOMER))): 
     return get_order_by_id(order_id,current_user,db)
 
-@router.patch("/{order_id}/status",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK)
+@router.patch("/{order_id}/status",response_model=OrderResponseSchema,status_code=status.HTTP_200_OK,
+              summary="Update Order Status",
+              description="Updates the order status according to the defined order workflow.")
 def update_order_endpoint(order_id:UUID,payload:OrderUpdateSchema,
                           db:Session=Depends(get_db),
                           _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return update_order(order_id,payload,db)
 
-@router.patch("/{order_id}/cancel")
+@router.patch("/{order_id}/cancel",status_code=status.HTTP_200_OK,
+              summary="Cancel Order",
+              description="Cancels an order, restores inventory, and updates related records where applicable.")
 def cancel_order_endpoint(order_id:UUID,db:Session=Depends(get_db),
                           _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return cancel_order(order_id,db)

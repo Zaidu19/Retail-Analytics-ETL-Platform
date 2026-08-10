@@ -8,7 +8,9 @@ from src.auth.service import login
 
 router = APIRouter(prefix="/auth",tags=["Auth"])
 
-@router.post("/",response_model=TokenResponseSchema,status_code=status.HTTP_200_OK)
+@router.post("/",response_model=TokenResponseSchema,status_code=status.HTTP_200_OK,
+             summary="User Login",
+            description="Authenticates a registered user and returns a JWT access token for accessing protected endpoints.")
 def login_endpoint(payload:LoginSchema,db:Session=Depends(get_db)):
     return login(payload,db)
 
