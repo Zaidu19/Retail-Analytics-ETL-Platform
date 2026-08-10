@@ -31,7 +31,7 @@ def create_order(payload:OrderCreateSchema,current_user:UserModel,db:Session)->O
             if not product:
                 stock_errors.append({
                     "product_id":str(item.product_id),
-                    "message":"Product not found"
+                    "message":"Product not found."
                 })
                 continue
 
@@ -114,18 +114,18 @@ def get_all_orders(db:Session,skip:int=0,limit:int=50)->list[OrderModel]:
 def get_order_by_id(order_id:UUID,current_user:UserModel,db:Session)->OrderModel:
     order = db.get(OrderModel,order_id)
     if not order:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found.")
     if current_user.role == UserRole.CUSTOMER:
 
         if order.customer.user_id != current_user.id:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You are not allowed to access this order")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You are not allowed to access this order.")
     
     return order
 
 def get_orders_by_customer(customer_id:UUID,db:Session)->list[OrderModel]:
     customer = db.get(CustomerModel,customer_id)
     if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found.")
     orders = db.scalars(select(OrderModel).where(OrderModel.customer_id == customer_id)).all()
     return orders
 
@@ -133,7 +133,7 @@ def update_order(order_id:UUID,payload:OrderUpdateSchema,db:Session)->OrderModel
     try:    
         order = db.get(OrderModel,order_id)
         if not order:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found.")
         if payload.status == OrderStatus.paid:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                                 detail="Order is marked as PAID automatically after succesfull payment.")
@@ -167,22 +167,22 @@ def cancel_order(order_id:UUID,db:Session)->OrderModel:
     try:    
         order = db.get(OrderModel,order_id)
         if not order:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found.")
 
         if order.status == OrderStatus.cancelled:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Order already cancelled")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Order already cancelled.")
 
         if order.status in (
             OrderStatus.shipped,
             OrderStatus.delivered):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot cancel shipped or delivered orders")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot cancel shipped or delivered orders.")
 
         payment = db.scalars(select(PaymentModel)
                              .where(PaymentModel.order_id == order.id)
                              .order_by(PaymentModel.created_at.desc())).first()
 
         if payment and payment.payment_status == PaymentStatus.success:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Paid orders must be refunded before cancellation")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Paid orders must be refunded before cancellation.")
 
         for item in order.order_items:
             product = db.get(ProductModel,item.product_id)

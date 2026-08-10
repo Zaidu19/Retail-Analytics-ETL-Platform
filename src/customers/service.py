@@ -1,15 +1,15 @@
-from uuid import UUID
+
 
 from datetime import date
 from fastapi import HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.customers.dtos import CustomerCreateSchema,CustomerUpdateSchema
+from src.customers.dtos import CustomerCreateSchema,CustomerUpdateSchema,CustomerOwnUpdateSchema
 from src.customers.models import CustomerModel
 from src.users.models import UserModel
 
-def create_customer(payload: CustomerCreateSchema,current_user:UserModel,db: Session,)->CustomerModel:
+def create_customer(payload: CustomerCreateSchema,current_user:UserModel,db:Session,)->CustomerModel:
 
     existing_customer = db.scalar(
         select(CustomerModel).where(
@@ -40,6 +40,31 @@ def create_customer(payload: CustomerCreateSchema,current_user:UserModel,db: Ses
 
     return customer
 
+def get_my_profile(current_user:UserModel,db:Session)->CustomerModel:
+    customer = db.scalar(select(CustomerModel).where(CustomerModel.user_id == current_user.id))
+
+    if not customer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer profile not found.")
+
+    return customer
+
+def update_my_profile(payload:CustomerOwnUpdateSchema,current_user: UserModel,db: Session,)->CustomerModel:
+
+    customer = db.scalar(select(CustomerModel).where(CustomerModel.user_id == current_user.id))
+
+    if not customer:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer profile not found.")
+
+    customer.full_name = payload.full_name
+    customer.phone_number = payload.phone_number
+    customer.country = payload.country
+    customer.city = payload.city
+
+    db.commit()
+    db.refresh(customer)
+
+    return customer
+
 def get_all_customers(db:Session,)-> list[CustomerModel]:
     customers = db.scalars(select(CustomerModel)).all()
     return customers
@@ -47,13 +72,13 @@ def get_all_customers(db:Session,)-> list[CustomerModel]:
 def get_customer_with_id(customer_id:str,db:Session,)->CustomerModel:
     customer =db.get(CustomerModel,customer_id)
     if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="customer not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found.")
     return customer
 
 def update_customer(customer_id:str,payload:CustomerUpdateSchema,db:Session)->CustomerModel:
     customer = db.get(CustomerModel,customer_id)
     if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="customer not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found.")
     customer.full_name = payload.full_name
     customer.phone_number = payload.phone_number
     customer.country = payload.country
@@ -68,7 +93,7 @@ def update_customer(customer_id:str,payload:CustomerUpdateSchema,db:Session)->Cu
 def delete_customer(customer_id:str,db:Session,)->None:
     customer= db.get(CustomerModel,customer_id)
     if not customer:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="customer not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Customer not found.")
     
     db.delete(customer)
     db.commit()

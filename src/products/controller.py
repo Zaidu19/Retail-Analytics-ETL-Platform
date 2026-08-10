@@ -26,29 +26,39 @@ from src.inventory_logs.dtos import InventoryLogResponseSchema
 
 router =APIRouter(prefix="/products",tags=["Products"])
 
-@router.post("/",response_model=ProductResponseSchema,status_code=status.HTTP_201_CREATED)
+@router.post("/",response_model=ProductResponseSchema,status_code=status.HTTP_201_CREATED,
+             summary="Create Product",
+            description="Creates a new product. Only administrators can create products.")
 def create_product_endpoint(payload:ProductCreateSchema,db:Session=Depends(get_db),
                             _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return create_product(payload,db)
 
-@router.get("/",response_model=list[ProductResponseSchema],status_code=status.HTTP_200_OK)
+@router.get("/",response_model=list[ProductResponseSchema],status_code=status.HTTP_200_OK,
+            summary="List Products",
+            description="Returns all available products.")
 def get_all_products_endpoint(db:Session=Depends(get_db),
                               _:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.CUSTOMER,
                                 UserRole.BUSINESS_ANALYST,UserRole.INVENTORY_MANAGER))):
     return get_all_products(db,)
 
-@router.get("/{product_id}",response_model=ProductResponseSchema,status_code=status.HTTP_200_OK)
+@router.get("/{product_id}",response_model=ProductResponseSchema,status_code=status.HTTP_200_OK,
+            summary="Get Product",
+            description="Returns product details by ID.")
 def get_product_by_id_endpoint(product_id:UUID,db:Session=Depends(get_db),
                                _:UserModel=Depends(require_roles(UserRole.CUSTOMER,UserRole.BUSINESS_ANALYST,
                                 UserRole.INVENTORY_MANAGER,UserRole.ADMIN))):
     return get_product_by_id(product_id,db,)
 
-@router.put("/{product_id}",response_model=ProductResponseSchema,status_code=status.HTTP_200_OK)
+@router.put("/{product_id}",response_model=ProductResponseSchema,status_code=status.HTTP_200_OK,
+            summary="Update Product",
+            description="Updates product information including price, stock, and category.")
 def update_product_endpoint(product_id:UUID,payload:ProductUpdateSchema,db:Session=Depends(get_db),
                             _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return update_product(product_id,payload,db,)
 
-@router.delete("/{product_id}",status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{product_id}",status_code=status.HTTP_204_NO_CONTENT,
+               summary="Delete Product",
+               description="Deletes a product.")
 def delete_product_endpoint(product_id:UUID,db:Session=Depends(get_db),
                             _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return delete_product(product_id,db,)

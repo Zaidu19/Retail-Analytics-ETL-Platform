@@ -19,7 +19,7 @@ def create_category(payload:CategoryCreateSchema,db:Session)->CategoryModel:
 
     if existing_category:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Category with this name already exists")
+                            detail="Category with this name already exists.")
     category = CategoryModel(
         **payload.model_dump()
     )
@@ -36,13 +36,13 @@ def get_all_categories(db:Session)->list[CategoryModel]:
 def get_category_by_id(category_id:UUID,db:Session)->CategoryModel:
     category =db.get(CategoryModel,category_id)
     if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found.")
     return category
 
 def update_category(category_id:UUID,payload:CategoryUpdateSchema,db:Session)->CategoryModel:
     category=db.get(CategoryModel,category_id)
     if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found.")
 
     update_data=payload.model_dump(exclude_unset=True,exclude_none=True)
     for key,value in update_data.items():
@@ -56,6 +56,6 @@ def update_category(category_id:UUID,payload:CategoryUpdateSchema,db:Session)->C
 def delete_category(category_id:UUID,db:Session)->None:
     category = db.get(CategoryModel,category_id)
     if not category:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Category not found.")
     db.delete(category)
     db.commit()

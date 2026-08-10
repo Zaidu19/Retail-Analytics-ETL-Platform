@@ -21,13 +21,17 @@ from src.payments.service import(
 router = APIRouter(prefix="/payments",tags=["Payments"])
 
 
-@router.patch("/{payment_id}",response_model=PaymentResponseSchema,status_code=status.HTTP_200_OK)
+@router.patch("/{payment_id}",response_model=PaymentResponseSchema,status_code=status.HTTP_200_OK,
+              summary="Complete Payment",
+              description="Marks a pending payment as successful and updates the associated order status.")
 def update_status_endpoint(payment_id:UUID,payload:PaymentUpdateSchema,
                            db:Session=Depends(get_db),
                            _:UserModel=Depends(require_roles(UserRole.ADMIN))):
     return update_payment_status(payment_id,payload,db)
 
-@router.get("/{payment_id}",response_model=PaymentResponseSchema,status_code=status.HTTP_200_OK)
+@router.get("/{payment_id}",response_model=PaymentResponseSchema,status_code=status.HTTP_200_OK,
+            summary="Get Payment",
+            description="Returns payment details for a specific order.")
 def get_payment_by_id_endpoint(payment_id:UUID,db:Session=Depends(get_db),
                                current_user:UserModel=Depends(require_roles(UserRole.ADMIN,UserRole.BUSINESS_ANALYST,UserRole.CUSTOMER))):
     return get_payment_by_id(payment_id,current_user,db)
