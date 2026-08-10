@@ -31,7 +31,7 @@ def update_payment_status(payment_id:UUID,payload:PaymentUpdateSchema,db:Session
         payment = db.get(PaymentModel,payment_id)
 
         if not payment:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Payment not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Payment not found.")
 
         if payload.payment_status == payment.payment_status:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Payment already has this status.")
@@ -44,7 +44,7 @@ def update_payment_status(payment_id:UUID,payload:PaymentUpdateSchema,db:Session
         if payload.payment_status == PaymentStatus.success:
 
             if order.status == OrderStatus.cancelled:
-                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot complete payment for cancelled order")
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="Cannot complete payment for cancelled order.")
 
             complete_payment(payment,order)
         
@@ -69,10 +69,10 @@ def update_payment_status(payment_id:UUID,payload:PaymentUpdateSchema,db:Session
 def get_payment_by_id(payment_id:UUID,current_user:UserModel,db:Session)->PaymentModel:
     payment = db.get(PaymentModel,payment_id)
     if not payment:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Payment not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Payment not found.")
     if current_user.role == UserRole.CUSTOMER:
         if payment.order.customer.user_id != current_user.id:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You are not allowed to access this payment")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="You are not allowed to access this payment.")
     return payment
 
 def get_list_of_payments(db:Session,skip:int=0,limit:int=100)->list[PaymentModel]:
@@ -82,7 +82,7 @@ def get_list_of_payments(db:Session,skip:int=0,limit:int=100)->list[PaymentModel
 def get_payment_by_order(order_id:UUID,current_user:UserModel,db:Session)->list[PaymentModel]:
     order = db.get(OrderModel,order_id)
     if not order:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Order not found.")
 
     if current_user.role == UserRole.CUSTOMER:
         if order.customer.user_id != current_user.id:

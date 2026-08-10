@@ -5,6 +5,12 @@ from datetime import datetime,timezone,timedelta
 from jose import JWTError,jwt
 from fastapi.security import OAuth2PasswordBearer
 
+from src.config import(
+    SECRET_KEY,
+    ALGORITHM,
+    ACCESS_TOKEN_EXPIRE_MINUTES,
+)
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
@@ -17,15 +23,10 @@ def verify_password(password:str,hashed_password:str)->bool:
     return password_hash.verify(password,hashed_password)
 
 
-SECRET_KEY = "Zaid-RETAIL-ANALYTICS-ETL-PLATFORM"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTE = 30
-
-
 def create_access_token(data:dict)->str:
     to_encode =data.copy()
 
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTE)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
     to_encode.update({"exp":expire})
 

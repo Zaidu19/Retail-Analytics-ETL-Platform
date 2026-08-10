@@ -1,5 +1,4 @@
 
-from typing import Callable
 from fastapi import HTTPException,status,Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session

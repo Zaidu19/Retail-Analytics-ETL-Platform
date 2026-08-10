@@ -8,7 +8,9 @@ class UserCreateSchema(BaseModel):
     username :str
     email:EmailStr
     password: str
-    role :UserRole
+
+class UserRoleUpdateSchema(BaseModel):
+    role: UserRole
 
 class UserLoginSchema(BaseModel):
     email:str

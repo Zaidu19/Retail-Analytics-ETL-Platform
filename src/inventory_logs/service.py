@@ -13,7 +13,7 @@ from src.inventory_logs.dtos import InventoryLogCreateSchema
 def create_inventory_log(payload:InventoryLogCreateSchema,db:Session)->InventoryLogModel:
     product = db.get(ProductModel,payload.product_id)
     if not product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Product not found.")
 
     if payload.reason == InventoryReason.sale:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
@@ -57,7 +57,7 @@ def create_inventory_log(payload:InventoryLogCreateSchema,db:Session)->Inventory
 def get_inventory_logs_by_id(inventory_log_id:UUID,db:Session)->InventoryLogModel:
     inventory_log = db.get(InventoryLogModel,inventory_log_id)
     if not inventory_log:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Inventory not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Inventory not found.")
     return inventory_log
 
 
@@ -68,7 +68,7 @@ def get_list_inventory_logs(db:Session,skip:int=0,limit:int=100)->list[Inventory
 def get_inventory_logs_by_product(product_id:UUID,db:Session)->list[InventoryLogModel]:
     product = db.get(ProductModel,product_id)
     if not product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Product not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Product not found.")
     inventory_logs = db.scalars(select(InventoryLogModel).where(InventoryLogModel.product_id == product_id)).all()
 
     return inventory_logs
