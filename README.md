@@ -207,7 +207,7 @@ src/
 # 🗄 Database Schema
 The following Entity Relationship Diagram (ERD) represents the database design of the Retail Analytics & ETL Platform.
 
-![ER Diagram](images/er-diagram.png)
+![Database ER Diagram](images/database-er-diagram.png)
 ---
 
 # 🔐 RBAC
