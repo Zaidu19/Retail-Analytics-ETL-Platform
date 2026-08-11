@@ -492,7 +492,8 @@ Every push and pull request automatically runs the complete test suite using Git
 
 Python Backend Developer | Data Analytics Enthusiast
 
-- GitHub: https://github.com/Zaidu19
-- LinkedIn: *(Add your LinkedIn profile)*
+- GitHub: [Zaidu19](https://github.com/Zaidu19)
+- LinkedIn: [Mohammad Zaid Ansari](https://www.linkedin.com/in/mohammad-zaid-ansari-607529280)
+
 
 ---
