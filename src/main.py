@@ -8,7 +8,8 @@ from src.api.router import api_router
 app = FastAPI(title=settings.APP_NAME,
               version=settings.APP_VERSION,
               description="""
-              "A production-ready Retail Analytics platform built with FastAPI and PostgreSQL"
+              "Production-ready Retail Analytics & ETL Platform built with FastAPI,
+              PostgreSQL, SQLAlchemy, JWT Authentication, RBAC, and Business Analytics APIs."
               ## Features
 
                 - JWT Authentication
