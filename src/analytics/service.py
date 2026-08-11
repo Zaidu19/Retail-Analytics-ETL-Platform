@@ -260,7 +260,8 @@ def get_refund_analytics(db:Session):
     )
 
     refund_amounts = db.scalar(
-        select(func.sum(RefundModel.amount)
+        select(
+            func.coalesce(func.sum(RefundModel.amount),0)
             ).where(
                 RefundModel.status == RefundStatus.approved
             )
@@ -281,19 +282,21 @@ def get_refund_analytics(db:Session):
             2
         )
 
-    avg_refund_rate = round(db.scalar(
-        select(func.avg(RefundModel.amount)
+    avg_refund_amount = db.scalar(
+        select(
+            func.coalesce(func.avg(RefundModel.amount),0)
             ).where(
                 RefundModel.status == RefundStatus.approved
             ),
-        ),2
-    )    
+        )
+    avg_refund_amount = round(avg_refund_amount,2)
+       
 
     return RefundAnalyticsResponseSchema(
         total_refunds=total_refunds,
         refund_amounts=refund_amounts,
         refund_rate=refund_rate,
-        avg_refund_amount=avg_refund_rate
+        avg_refund_amount=avg_refund_amount
     )    
 
 def get_low_stock_products(db:Session):
@@ -315,7 +318,7 @@ def get_low_stock_products(db:Session):
 
 def get_outofstock_products(db:Session):
     products = db.scalars(
-        select(ProductModel.id)
+        select(ProductModel)
         .where(ProductModel.stock_qty == 0)
         .order_by(ProductModel.name.asc())
     ).all()

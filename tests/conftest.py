@@ -3,6 +3,11 @@ pytest_plugins = [
     "tests.fixtures.auth",
     "tests.fixtures.customers",
     "tests.fixtures.categories",
+    "tests.fixtures.products",
+    "tests.fixtures.orders",
+    "tests.fixtures.payments",
+    "tests.fixtures.refunds",
+    "tests.fixtures.inventory_logs",
 ]
 
 import pytest

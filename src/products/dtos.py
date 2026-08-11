@@ -17,7 +17,7 @@ class ProductUpdateSchema(BaseModel):
     name:str|None =Field(default=None,min_length=2,max_length=100,)
     description:str|None = Field(default=None,min_length=20,max_length=500,)
     category_id:UUID |None =None
-    price:Decimal|None =Field(default=None,gt=2,decimal_places=2,)
+    price:Decimal|None =Field(default=None,gt=0,decimal_places=2,)
     cost:Decimal|None = Field(default=None,ge=0,decimal_places=2,)
     stock_qty:int|None = Field(default=None,ge=0,)
 
