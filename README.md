@@ -262,6 +262,25 @@ Future ETL enhancements
 - ETL-ready Architecture
 
 ---
+## Database Seeding
+
+Populate the database with realistic demo data.
+
+python -m scripts.seed
+
+This generates:
+
+- Users
+- Customers
+- Categories
+- Products
+- Orders
+- Order Items
+- Payments
+- Inventory Logs
+- Refunds
+
+---
 
 ## Testing
 
