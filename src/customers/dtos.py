@@ -23,7 +23,6 @@ class CustomerUpdateSchema(BaseModel):
 class CustomerResponseSchema(BaseModel):
     id:UUID
     full_name:str
-    username:str
     email:str
     phone_number:str|None
     country:str

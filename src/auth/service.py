@@ -2,23 +2,25 @@
 from fastapi import HTTPException,status,Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from src.auth.dtos import LoginSchema,TokenResponseSchema
+from fastapi.security import OAuth2PasswordRequestForm
+
+from src.auth.dtos import TokenResponseSchema
 from src.db.database import get_db
 from src.common.enum import UserRole
 from src.users.models import UserModel
 from src.auth.security import (
     create_access_token,
     verify_password,
-    oauth2_scheme,
     decode_access_token,
+    oauth2_scheme,
 )
 
-def login(payload:LoginSchema,db:Session)->TokenResponseSchema:
-    user = db.scalars(select(UserModel).where(UserModel.email == payload.email)).first()
+def login(form_data:OAuth2PasswordRequestForm,db:Session)->TokenResponseSchema:
+    user = db.scalars(select(UserModel).where(UserModel.email == form_data.username)).first()
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid email or password.")
 
-    if not verify_password(payload.password,user.password_hash,):
+    if not verify_password(form_data.password,user.password_hash,):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid email or password.")
 
     if not user.is_active:

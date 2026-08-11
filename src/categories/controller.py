@@ -61,5 +61,5 @@ def update_category_endpoint(category_id:UUID,payload:CategoryUpdateSchema,db:Se
                description="Deletes a category.")
 def delete_category_endpoint(category_id:UUID,db:Session=Depends(get_db),
                              _:UserModel=Depends(require_roles(UserRole.ADMIN,
-                                UserRole.INVENTORY_MANAGER,UserRole.CUSTOMER))):
+                                UserRole.INVENTORY_MANAGER,))):
     return delete_category(category_id,db)

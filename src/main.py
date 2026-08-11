@@ -1,11 +1,12 @@
 from src.db import models
 from fastapi import FastAPI
 
-from src.config import APP_NAME,APP_VERSION
+from src.core.config import settings
 from src.api.router import api_router
 
-app = FastAPI(title=APP_NAME,
-              version=APP_VERSION,
+
+app = FastAPI(title=settings.APP_NAME,
+              version=settings.APP_VERSION,
               description="""
               "A production-ready Retail Analytics platform built with FastAPI and PostgreSQL"
               ## Features

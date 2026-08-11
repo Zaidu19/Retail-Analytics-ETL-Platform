@@ -10,6 +10,12 @@ class Settings(BaseSettings):
     POSTGRES_PORT:str
     POSTGRES_DB:str
 
+
+    TEST_POSTGRES_DB: str
+    SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
+
     model_config = SettingsConfigDict(
         env_file=".env",
         extra="ignore"
