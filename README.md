@@ -1,139 +1,229 @@
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.140-green)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0-red)
+![Pytest](https://img.shields.io/badge/Tests-Passing-brightgreen)
+![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-success)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
 # 🛍️ Retail Analytics & ETL Platform
 
-A production-style Retail Analytics Platform built with **FastAPI**, **PostgreSQL**, and **SQLAlchemy** that simulates a real-world e-commerce backend.
+A production-style **Retail Analytics & ETL Platform** built with **FastAPI**, **PostgreSQL**, **SQLAlchemy**, and **Python**.
 
-The platform manages customers, products, orders, payments, refunds, inventory, and business analytics while implementing secure authentication, Role-Based Access Control (RBAC), and reporting APIs.
+The platform simulates the backend of a retail business by managing users, customers, products, inventory, orders, payments, refunds, and business analytics while implementing secure authentication, Role-Based Access Control (RBAC), automated testing, and Continuous Integration.
 
 ---
 
 # 🚀 Features
 
-## Authentication & Authorization
+## 🔐 Authentication & Authorization
 
 - JWT Authentication
-- Password Hashing
+- Secure Password Hashing
 - Role-Based Access Control (RBAC)
-- Secure Login
 - User Registration
+- Secure Login
 - Admin Role Management
 
-Roles:
+### Supported Roles
 
 - Customer
+- Inventory Manager
 - Business Analyst
 - Admin
-- Inventory Manager
 
 ---
 
-## Customer Management
+## 👤 User & Customer Management
+
+### Users
+
+- User Registration
+- Login Authentication
+- Role Management
+- Active User Validation
+
+### Customers
 
 - Create Customer Profile
-- View Own Profile (`/customers/me`)
+- View Own Profile
 - Update Own Profile
-- Admin Customer Management
 - Customer Order History
+- Admin Customer Management
 
 ---
 
-## Product & Category Management
+## 📦 Product & Category Management
+
+### Categories
+
+- Create Category
+- Update Category
+- Delete Category
+- View Categories
+
+### Products
 
 - Product CRUD
-- Category CRUD
-- Inventory Tracking
+- Category Mapping
+- Stock Tracking
+- Stock Validation
 - Low Stock Monitoring
-- Product Relationships
 
 ---
 
-## Order Management
+## 🛒 Order Management
 
 - Create Orders
 - Automatic Order Items
-- Automatic Stock Reduction
-- Order Status Workflow
+- Automatic Payment Creation
+- Automatic Inventory Updates
+- Automatic Inventory Logs
+- Cancel Orders
+- Inventory Restoration
+
+### Order Workflow
 
 ```
 Pending
-        ↓
+   ↓
 Paid
-        ↓
+   ↓
 Shipped
-        ↓
+   ↓
 Delivered
-        ↓
+   ↓
 Completed
 ```
 
-- Cancel Orders
-- Restore Inventory on Cancellation
-
 ---
 
-## Payment Module
+## 💳 Payments
 
-- Cash Payments
-- Online Payments
 - Payment Status Workflow
+- Multiple Payment Methods
 - Automatic Order Status Updates
+- Payment Validation
+
+Supported Methods
+
+- Card
+- UPI
+- Wallet
+- Net Banking
+- Cash
 
 ---
 
-## Refund Workflow
+## 💰 Refund Workflow
 
-- Request Refund
-- Approve Refund
-- Reject Refund
-- Automatic Payment Refund
-- Inventory Restoration
-- Refund Status Tracking
+- Customer Refund Request
+- Admin Approval
+- Admin Rejection
+- Automatic Inventory Restoration
+- Payment Refund Tracking
 
 ---
 
-## Inventory Logs
+## 📋 Inventory Management
 
-Automatic inventory logs for:
+Automatic inventory logs for
 
 - Sales
 - Restocks
 - Returns
-- Damage
+- Damaged Products
 - Manual Adjustments
 
 ---
 
-## Analytics APIs
+# 📊 Analytics & Reporting
 
-### Dashboard
+The platform provides business intelligence APIs for retail operations.
+
+## Dashboard
 
 - Total Customers
 - Total Products
 - Total Orders
 - Completed Orders
 - Refunded Orders
-- Revenue
+- Total Revenue
 - Refund Amount
-- Low Stock Count
+- Low Stock Products
 
-### Sales Analytics
+---
+
+## Sales Analytics
 
 - Monthly Sales
-- Top Products
+- Top Selling Products
+- Top Revenue Products
 - Top Customers
-- Category Sales
+- Top Categories
 
-### Refund Analytics
+---
 
-- Refund Count
+## Profit Analytics
+
+- Product Profit Analysis
+
+---
+
+## Refund Analytics
+
+- Total Refunds
 - Refund Amount
 - Refund Rate
+- Average Refund Amount
 
-### Inventory Analytics
+---
 
+## Inventory Analytics
+
+- Inventory Value
+- Inventory Movement
 - Low Stock Products
 - Out of Stock Products
-- Inventory Value
-- Inventory Movements
+
+---
+
+# 🔄 ETL-Ready Architecture
+
+The project is designed to support ETL (Extract, Transform, Load) workflows.
+
+Current capabilities
+
+- Structured PostgreSQL schema
+- Data validation using FastAPI & Pydantic
+- Business rule transformations
+- Aggregated reporting APIs
+- Analytics-ready database design
+
+Future ETL enhancements
+
+- CSV/Excel Imports
+- Pandas Data Pipelines
+- Scheduled ETL Jobs
+- Apache Airflow Integration
+- Data Warehouse Integration
+
+---
+
+# 🔐 Role-Based Access Control (RBAC)
+
+| Module | Customer | Inventory Manager | Business Analyst | Admin |
+|---------|:--------:|:----------------:|:----------------:|:-----:|
+| Register/Login | ✅ | ✅ | ✅ | ✅ |
+| Customer Profile | Own | ❌ | Read | Full |
+| Products | Read | Update Stock | Read | CRUD |
+| Categories | Read | Read | Read | CRUD |
+| Orders | Own | Read | Read | Full |
+| Payments | Own | Read | Read | Full |
+| Refunds | Own | Process Returns | Read | Full |
+| Inventory Logs | ❌ | CRUD | Read | Full |
+| Analytics | ❌ | Inventory Only | Read All | Read All |
+| User Roles | ❌ | ❌ | ❌ | Manage |
 
 ---
 
@@ -147,47 +237,66 @@ Automatic inventory logs for:
 - Alembic
 - Pydantic v2
 
+---
+
 ## Database
 
 - PostgreSQL
 
+---
+
 ## Authentication
 
-- JWT
-- Passlib (bcrypt)
+- JWT Authentication
+- Argon2 Password Hashing
 
-## Analytics
+---
+
+## Analytics & ETL
 
 - SQL Aggregations
-- Group By
-- Joins
-- Window-ready Queries
+- Complex Joins
+- GROUP BY
+- Business KPIs
+- Reporting APIs
+- ETL-ready Architecture
+
+---
 
 ## Testing
 
 - Pytest
-- TestClient
+- FastAPI TestClient
+- Transaction Rollback Testing
 
-## Data
+---
 
-- Pandas
-
-## Version Control
+## DevOps
 
 - Git
 - GitHub
+- GitHub Actions (CI)
+
+---
+
+## Data Processing
+
+- Pandas
 
 ---
 
 # 📂 Project Structure
 
-```
+```text
 src/
 │
 ├── analytics/
 ├── auth/
 ├── categories/
+├── common/
+├── core/
 ├── customers/
+├── db/
 ├── inventory_logs/
 ├── orderitems/
 ├── orders/
@@ -196,55 +305,39 @@ src/
 ├── refunds/
 ├── users/
 │
-├── common/
-├── db/
-├── utils/
 └── main.py
+
+tests/
+│
+├── analytics/
+├── auth/
+├── categories/
+├── customers/
+├── fixtures/
+├── inventory_logs/
+├── orders/
+├── payments/
+├── products/
+├── refunds/
+└── users/
 ```
 
 ---
 
 # 🗄 Database Schema
+
 The following Entity Relationship Diagram (ERD) represents the database design of the Retail Analytics & ETL Platform.
 
-![Database ER Diagram](images/database-er-diagram.png)
----
-
-# 🔐 RBAC
-
-| Module           | Customer |     Inventory Manager     | Business Analyst |   Admin  |
-| ---------------- | :------: | :-----------------------: | :--------------: | :------: |
-| Register/Login   |     ✅    |             ✅             |         ✅        |     ✅    |
-| Customer Profile |    Own   |             ❌             |       Read       |   Full   |
-| Products         |   Read   |        Update Stock       |       Read       |   CRUD   |
-| Categories       |   Read   |            Read           |       Read       |   CRUD   |
-| Orders           |    Own   |            Read           |       Read       |   Full   |
-| Payments         |    Own   |            Read           |       Read       |   Full   |
-| Refunds          |    Own   |      Process Returns      |       Read       |   Full   |
-| Inventory Logs   |     ❌    |            CRUD           |       Read       |   Full   |
-| Analytics        |     ❌    | Inventory Only (optional) |     Read All     | Read All |
-| User Roles       |     ❌    |             ❌             |         ❌        |  Manage  |
-
----
-
-# 📊 Analytics
-
-Implemented business reports include:
-
-- Dashboard KPIs
-- Monthly Revenue
-- Top Selling Products
-- Top Customers
-- Category Sales
-- Refund Analytics
-- Inventory Analytics
+>![Database ER Diagram](images/database-er-diagram.png)
 
 ---
 
 # ⚙️ Installation
 
+Clone the repository
+
 ```bash
-git clone https://github.com/yourusername/Retail-Analytics-ETL-Platform.git
+git clone https://github.com/Zaidu19/Retail-Analytics-ETL-Platform.git
 
 cd Retail-Analytics-ETL-Platform
 ```
@@ -255,12 +348,18 @@ Create virtual environment
 python -m venv env
 ```
 
-Activate
+Activate virtual environment
 
-Windows
+### Windows
 
 ```bash
 env\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source env/bin/activate
 ```
 
 Install dependencies
@@ -269,13 +368,13 @@ Install dependencies
 pip install -r requirements.txt
 ```
 
-Run migrations
+Run database migrations
 
 ```bash
 alembic upgrade head
 ```
 
-Run server
+Start the server
 
 ```bash
 uvicorn src.main:app --reload
@@ -301,43 +400,99 @@ http://localhost:8000/redoc
 
 # 🧪 Testing
 
+The project includes automated tests for
+
+- Authentication
+- Users
+- Customers
+- Categories
+- Products
+- Orders
+- Payments
+- Refunds
+- Inventory Logs
+- Analytics
+
 Run tests
 
 ```bash
-pytest
+pytest -v
 ```
+
+---
+
+# ⚙️ Continuous Integration
+
+GitHub Actions automatically
+
+- Installs dependencies
+- Starts PostgreSQL
+- Runs the complete Pytest suite
+- Validates every push and pull request
 
 ---
 
 # 📸 Screenshots
 
-Add screenshots here:
+Include screenshots of
 
+## Swagger API Documentation
 - Swagger UI
-- Analytics Dashboard
-- PostgreSQL Tables
-- Power BI Dashboard (Coming Soon)
+
+The project exposes RESTful APIs documented using **OpenAPI (Swagger UI)** for interactive testing and exploration.
+
+![Swagger UI](images/swagger-ui.jpeg)
+
+
+## PostgreSQL Database
+- PostgreSQL Database
+
+The project uses PostgreSQL as the primary relational database, with normalized tables and foreign key relationships supporting retail operations and analytics.
+
+![PostgreSQL Database](images/postgres-db.png)
+
+## Analytics APIs
+- Analytics APIs
+
+The platform provides business intelligence endpoints for monitoring sales performance, customer behavior, inventory, profitability, and refunds.
+
+![Analytics APIs](images/analytics-api.png)
+
+
+## Continuous Integration
+- GitHub Actions Workflow
+
+Every push and pull request automatically runs the complete test suite using GitHub Actions.
+![GitHub Actions](images/github-actions.png)
+
+- Power BI Dashboard *(Planned)*
 
 ---
 
 # 🚀 Future Improvements
 
-- Docker Containerization
+- Docker & Docker Compose
 - AWS Deployment
-- CI/CD with GitHub Actions
-- MongoDB Activity Logs
 - Redis Caching
+- Power BI Dashboard
+- Apache Airflow
+- Automated ETL Pipelines
 - Email Notifications
-- Power BI Dashboards
-- Faker Data Generation
-- Advanced ETL Pipelines
+- Background Tasks (Celery)
+- API Rate Limiting
+- Data Warehouse Integration
 
 ---
 
 # 👨‍💻 Author
 
-**Mohammad Zaid Ansari**
+## Mohammad Zaid Ansari
 
-B.Tech CSE
+**B.Tech – Computer Science & Engineering**
 
 Python Backend Developer | Data Analytics Enthusiast
+
+- GitHub: https://github.com/Zaidu19
+- LinkedIn: *(Add your LinkedIn profile)*
+
+---
