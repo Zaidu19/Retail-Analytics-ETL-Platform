@@ -530,11 +530,11 @@ The platform provides business intelligence endpoints for monitoring sales perfo
 
 ### Executive Dashboard
 
-![Executive Dashboard](images/Executive-dashboard.png)
+![Executive Dashboard](images/Executive-Dashboard.png)
 
 ### Sales Analytics Dashboard
 
-![Sales Analytics Dashboard](images/sales-dashboard.png)
+![Sales Analytics Dashboard](images/Sales-dashboard.png)
 
 
 ## Continuous Integration
