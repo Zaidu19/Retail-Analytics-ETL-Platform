@@ -426,6 +426,20 @@ uvicorn src.main:app --reload
 ```
 
 ---
+## 🚀 Live Demo
+
+**Live API:** [Retail Analytics API](https://retail-analytics-etl-platform.onrender.com)
+
+![Live Render Deployement](images/render-deployement.png)
+
+**Swagger Documentation:** [Open Swagger](https://retail-analytics-etl-platform.onrender.com/docs)
+
+### Deployment Stack
+
+- FastAPI — Backend
+- Render — API Deployment
+- Neon PostgreSQL — Cloud Database
+- Power BI — Analytics & Visualization
 
 # 📖 API Documentation
 
@@ -535,6 +549,10 @@ The platform provides business intelligence endpoints for monitoring sales perfo
 ### Sales Analytics Dashboard
 
 ![Sales Analytics Dashboard](images/Sales-dashboard.png)
+
+### Live API Documentation
+
+![Live Swagger API](images/live-api-swagger.png)
 
 
 ## Continuous Integration
