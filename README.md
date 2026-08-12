@@ -6,9 +6,20 @@
 ![GitHub Actions](https://img.shields.io/badge/CI-GitHub_Actions-success)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
+
+## ⭐ Project Highlights
+
+- Developed a production-style Retail Analytics Platform using FastAPI and PostgreSQL.
+- Implemented JWT Authentication and Role-Based Access Control.
+- Built complete order, payment, refund, and inventory workflows.
+- Created automated database seeding using Faker for realistic analytics data.
+- Designed interactive Power BI dashboards with DAX measures, slicers, KPIs, and business visualizations.
+- Wrote unit tests using Pytest to improve code reliability.
+
+
 # 🛍️ Retail Analytics & ETL Platform
 
-A production-style **Retail Analytics & ETL Platform** built with **FastAPI**, **PostgreSQL**, **SQLAlchemy**, and **Python**.
+A production-style **Retail Analytics & ETL Platform** built with **FastAPI**, **PostgreSQL**, **SQLAlchemy**,**Python** and **PowerBI**.
 
 The platform simulates the backend of a retail business by managing users, customers, products, inventory, orders, payments, refunds, and business analytics while implementing secure authentication, Role-Based Access Control (RBAC), automated testing, and Continuous Integration.
 
@@ -236,6 +247,8 @@ Future ETL enhancements
 - SQLAlchemy 2.0
 - Alembic
 - Pydantic v2
+- JWT Authentication
+- Passlib (Password Hashing)
 
 ---
 
@@ -244,6 +257,12 @@ Future ETL enhancements
 - PostgreSQL
 
 ---
+
+### Data Analytics
+
+- Power BI Desktop
+- DAX
+- Power Query
 
 ## Authentication
 
@@ -289,6 +308,13 @@ This generates:
 - Transaction Rollback Testing
 
 ---
+
+### Tools
+
+- Git
+- GitHub
+- VS Code
+- Faker
 
 ## DevOps
 
@@ -439,6 +465,29 @@ pytest -v
 ```
 
 ---
+## 📊 Power BI Dashboard
+
+The project includes an interactive Power BI dashboard built on top of the PostgreSQL database.
+
+### Executive Dashboard
+
+- Revenue KPIs
+- Net Revenue
+- Profit
+- Average Order Value
+- Refund Rate
+- Sales by Category
+- Payment Method Distribution
+- Top Products
+- Interactive Slicers
+
+### Sales Analytics Dashboard
+
+- Revenue by Product
+- Revenue by Category
+- Bottom Performing Products
+- Product Sales Details
+- Category Filters
 
 # ⚙️ Continuous Integration
 
@@ -477,6 +526,16 @@ The platform provides business intelligence endpoints for monitoring sales perfo
 
 ![Analytics APIs](images/analytics-api.png)
 
+## 📸 Dashboard Preview
+
+### Executive Dashboard
+
+![Executive Dashboard](images/Executive-dashboard.png)
+
+### Sales Analytics Dashboard
+
+![Sales Analytics Dashboard](images/sales-dashboard.png)
+
 
 ## Continuous Integration
 - GitHub Actions Workflow
@@ -484,24 +543,48 @@ The platform provides business intelligence endpoints for monitoring sales perfo
 Every push and pull request automatically runs the complete test suite using GitHub Actions.
 ![GitHub Actions](images/github-actions.png)
 
-- Power BI Dashboard *(Planned)*
-
 ---
 
-# 🚀 Future Improvements
+## 🔗 REST API Modules
 
-- Docker & Docker Compose
-- AWS Deployment
-- Redis Caching
-- Power BI Dashboard
-- Apache Airflow
-- Automated ETL Pipelines
-- Email Notifications
-- Background Tasks (Celery)
-- API Rate Limiting
-- Data Warehouse Integration
+- Authentication
+- Users
+- Customers
+- Categories
+- Products
+- Orders
+- Order Items
+- Payments
+- Refunds
+- Inventory Logs
+- Analytics
 
----
+## 🚀 Future Improvements
+
+- Deploy Backend on AWS
+- Deploy PostgreSQL Database
+- Power BI Cloud Dashboard
+- Sales Forecasting
+- Time Intelligence Reports
+- Row-Level Security (RLS)
+- CI/CD Pipeline with GitHub Actions
+- Docker Support
+
+
+## 💡 Skills Demonstrated
+
+- REST API Development
+- Authentication & Authorization
+- Role-Based Access Control (RBAC)
+- PostgreSQL Database Design
+- SQLAlchemy ORM
+- Alembic Migrations
+- Pytest Testing
+- Data Seeding with Faker
+- Power BI Dashboard Development
+- DAX Measures
+- Data Modeling
+- Git & GitHub Workflow
 
 # 👨‍💻 Author
 
